@@ -9,9 +9,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import Nav from "./components/Nav/Nav";
 
 ReactDOM.render(
   <Router>
+    <Nav />
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/login" element={<Login />} />

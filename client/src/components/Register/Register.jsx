@@ -10,10 +10,19 @@ function Register() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
+  const removeExtraSpace = (s) => s.trim().split(/ +/).join(" ");
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    const updatedEmail = email.replace(/^\s+|\s+$/g, "");
+    const updatedPassword = password.replace(/^\s+|\s+$/g, "");
+    const updatedName = name.replace(/^\s+|\s+$/g, "");
     try {
-      const body = { email, password, name };
+      const body = {
+        email: updatedEmail,
+        password: updatedPassword,
+        name: updatedName,
+      };
       const response = await fetch("http://localhost:5000/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +39,7 @@ function Register() {
   };
 
   return (
-    <div className="w-screen h-screen bg-neutral-900 flex justify-center">
+    <div className="flex justify-center">
       <div className="h-60">
         <h1 className="text-6xl text-gray-200 mt-48 mb-12">Register</h1>
         <form onSubmit={onSubmit}>

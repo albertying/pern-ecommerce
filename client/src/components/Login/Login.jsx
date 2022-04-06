@@ -29,7 +29,7 @@ function Login() {
   };
 
   return (
-    <div className="w-screen h-screen bg-neutral-900 flex justify-center">
+    <div className="flex justify-center">
       <div className=" h-96">
         <h1 className="text-6xl text-gray-200 mt-48 mb-12">Login</h1>
         <form onSubmit={onSubmit}>
