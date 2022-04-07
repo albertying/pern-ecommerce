@@ -95,8 +95,7 @@ app.get("/verify", authorization, async (req, res) => {
 
 app.post("/token", refreshTokenAuthorization, async (req, res) => {
   try {
-    const accessToken = generateAccessToken(req.body.id);
-
+    const accessToken = generateAccessToken(req.id);
     res.json({ accessToken });
   } catch (err) {
     res.status(500).send("Server Error");

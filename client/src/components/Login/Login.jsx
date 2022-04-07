@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 // redux
 import { useDispatch } from "react-redux";
+import authenticate from "../../utils/authenticate";
 
 function Login() {
   // redux
@@ -30,7 +31,6 @@ function Login() {
 
       if (response.status === 200) {
         const res = await response.json();
-
         localStorage.setItem("accessToken", res.accessToken);
         localStorage.setItem("refreshToken", res.refreshToken);
 
