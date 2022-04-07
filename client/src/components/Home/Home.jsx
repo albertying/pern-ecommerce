@@ -9,25 +9,48 @@ function Home() {
   const name = useSelector((state) => state.login.name);
   const email = useSelector((state) => state.login.email);
   const dispatch = useDispatch();
+
   const isAuth = async () => {
     try {
       const response = await fetch("http://localhost:5000/verify", {
         method: "GET",
-        headers: { token: localStorage.token },
+        headers: { accessToken: localStorage.accessToken },
       });
-      if (response.status === 200) {
-        const data = authenticate(localStorage.token);
+      if (response.status !== 200) {
+        const body = { id: localStorage.id };
+        const response = await fetch("http://localhost:5000/token", {
+          method: "POST",
+          headers: { refreshToken: localStorage.refreshToken },
+          body: JSON.stringify(body),
+        });
+        if (response.status === 200) {
+          const res = await response.json();
+
+          localStorage.setItem("accessToken", res.accessToken);
+          const data = authenticate(localStorage.accessToken);
+          localStorage.setItem("id", data.id);
+
+          dispatch(login());
+          dispatch(setUserEmail("bye"));
+          dispatch(setUserName("hi"));
+        }
+      } else {
+        const data = authenticate(localStorage.accessToken);
+
+        localStorage.setItem("id", data.id);
         dispatch(login());
-        dispatch(setUserEmail(data.email));
-        dispatch(setUserName(data.name));
+        dispatch(setUserEmail("hye"));
+        dispatch(setUserName("hi"));
       }
     } catch (err) {
       console.error(err.message);
     }
   };
+
   useEffect(() => {
     isAuth();
   }, []);
+
   return (
     <div className="text-white">
       <h1>{JSON.stringify({ name })}</h1>

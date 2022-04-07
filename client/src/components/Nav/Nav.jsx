@@ -19,7 +19,9 @@ function Nav() {
             dispatch(logout());
             dispatch(setUserEmail(""));
             dispatch(setUserName(""));
-            localStorage.removeItem("token");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("id");
           }}
         >
           Sign out

@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const authorization = async (req, res, next) => {
-  const accessToken = req.header("accessToken");
-  if (!accessToken) {
+const refreshTokenAuthorization = async (req, res, next) => {
+  const refreshToken = req.header("refreshToken");
+  if (!refreshToken) {
     return res.status(403).json("Not Authorized");
   }
   try {
-    const payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     req.id = payload.id;
     next();
   } catch (err) {
@@ -16,4 +16,4 @@ const authorization = async (req, res, next) => {
   }
 };
 
-module.exports = authorization;
+module.exports = refreshTokenAuthorization;

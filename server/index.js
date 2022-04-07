@@ -1,11 +1,14 @@
 const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcryptjs");
-const jwtGenerator = require("./jwt/jwtGenerator");
+const generateAccessToken = require("./jwt/generateToken");
+const generateRefreshToken = require("./jwt/generateRefreshToken");
 const authorization = require("./jwt/authorization");
+const refreshTokenAuthorization = require("./jwt/refreshTokenAuthorization");
 
 const express = require("express");
 const { Router } = require("express");
+const { JsonWebTokenError } = require("jsonwebtoken");
 const app = express();
 
 // middleware
@@ -44,12 +47,7 @@ app.post("/users", async (req, res) => {
       [email, hashedPassword, name, email]
     );
     if (newUser.rows.length > 0) {
-      // res.json(newUser.rows[0]);
-      const token = jwtGenerator(
-        newUser.rows[0].user_email,
-        newUser.rows[0].user_name
-      );
-      res.json({ token });
+      res.json(newUser.rows[0]);
     } else {
       res.status(409).send("Email already exists");
     }
@@ -69,11 +67,9 @@ app.post("/login", async (req, res) => {
     );
     if (checkUser.rows.length > 0) {
       if (await bcrypt.compare(password, checkUser.rows[0].user_password)) {
-        const token = jwtGenerator(
-          checkUser.rows[0].user_email,
-          checkUser.rows[0].user_name
-        );
-        res.json({ token });
+        const accessToken = generateAccessToken(checkUser.rows[0].user_id);
+        const refreshToken = generateRefreshToken(checkUser.rows[0].user_id);
+        res.json({ accessToken, refreshToken });
       } else {
         res.status(401).send("Incorrect email or password.");
       }
@@ -90,6 +86,18 @@ app.post("/login", async (req, res) => {
 app.get("/verify", authorization, async (req, res) => {
   try {
     res.json("Authorized");
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
+
+// generate new token
+
+app.post("/token", refreshTokenAuthorization, async (req, res) => {
+  try {
+    const accessToken = generateAccessToken(req.body.id);
+
+    res.json({ accessToken });
   } catch (err) {
     res.status(500).send("Server Error");
   }
