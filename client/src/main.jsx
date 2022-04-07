@@ -2,23 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-// react router
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// redux
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 
 // components
-import App from "./App";
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
-import Nav from "./components/Nav/Nav";
+import App from "./app/App";
 
 ReactDOM.render(
-  <Router>
-    <Nav />
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
-  </Router>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById("root")
 );

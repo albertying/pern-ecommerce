@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+// redux
+import { useDispatch } from "react-redux";
+import { login, setUserEmail, setUserName } from "./loginSlice";
+
 function Login() {
+  // redux
+  const dispatch = useDispatch();
+
   let navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -11,14 +18,20 @@ function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    const updatedEmail = email.replace(/^\s+|\s+$/g, "");
+    const updatedPassword = password.replace(/^\s+|\s+$/g, "");
     try {
-      const body = { email, password };
+      const body = { email: updatedEmail, password: updatedPassword };
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       if (response.status === 200) {
+        const res = await response.json();
+
+        localStorage.setItem("token", res.token);
+
         navigate("/");
       } else {
         setErrorMessage("Incorrect email or password.");

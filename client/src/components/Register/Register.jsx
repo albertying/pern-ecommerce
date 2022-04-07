@@ -29,6 +29,8 @@ function Register() {
         body: JSON.stringify(body),
       });
       if (response.status === 200) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
         navigate("/login");
       } else {
         setErrorMessage("Email already in use.");
