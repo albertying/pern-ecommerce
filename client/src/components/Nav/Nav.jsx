@@ -19,6 +19,7 @@ function Nav() {
             dispatch(logout());
             dispatch(setUserEmail(""));
             dispatch(setUserName(""));
+            localStorage.removeItem("token");
           }}
         >
           Sign out
