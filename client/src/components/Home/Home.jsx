@@ -43,35 +43,6 @@ function Home() {
           dispatch(setUserName("hi"));
         }
       }
-
-      // if (response.status !== 200) {
-      //   const body = { id: localStorage.id };
-      //   console.log(localStorage.id);
-      // const response = await fetch("http://localhost:5000/token", {
-      //   method: "POST",
-      //   headers: { refreshToken: localStorage.refreshToken },
-      //   body: JSON.stringify(body),
-      // });
-      //   if (response.status === 200) {
-      //     const res = await response.json();
-
-      //     localStorage.setItem("accessToken", res.accessToken);
-      //     const wow = authenticate(localStorage.accessToken);
-      //     console.log(wow);
-      //     localStorage.setItem("id", wow.id);
-
-      //     dispatch(login());
-      //     dispatch(setUserEmail("bye"));
-      //     dispatch(setUserName("hi"));
-      //   }
-      // } else {
-      //   const data = authenticate(localStorage.accessToken);
-      //   console.log("data" + data);
-      //   localStorage.setItem("id", data.id);
-      //   dispatch(login());
-      //   dispatch(setUserEmail("hye"));
-      //   dispatch(setUserName("hi"));
-      // }
     } catch (err) {
       console.error(err.message);
     }

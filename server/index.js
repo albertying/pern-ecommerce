@@ -69,6 +69,12 @@ app.post("/login", async (req, res) => {
       if (await bcrypt.compare(password, checkUser.rows[0].user_password)) {
         const accessToken = generateAccessToken(checkUser.rows[0].user_id);
         const refreshToken = generateRefreshToken(checkUser.rows[0].user_id);
+
+        await pool.query(
+          "INSERT INTO refreshtokens (refreshtoken) VALUES ($1)",
+          [refreshToken]
+        );
+
         res.json({ accessToken, refreshToken });
       } else {
         res.status(401).send("Incorrect email or password.");
@@ -76,6 +82,21 @@ app.post("/login", async (req, res) => {
     } else {
       res.status(401).send("Incorrect email or password.");
     }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// logout
+
+app.delete("/logout", async (req, res) => {
+  const refreshToken = req.header("refreshToken");
+  try {
+    await pool.query("DELETE FROM refreshtokens WHERE refreshtoken = $1", [
+      refreshToken,
+    ]);
+
+    res.json("Token deleted");
   } catch (err) {
     console.error(err.message);
   }
